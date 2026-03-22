@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>TD117COMBOS-US Refill Guide</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
 h1 {
 margin-bottom: 10px;
@@ -20,6 +21,7 @@ width: 280px;
 border-radius: 6px;
 border: 1px solid #ccc;
 }
+    
 
 button {
 padding: 8px 12px;
@@ -80,7 +82,7 @@ color: #555;
 <h2>TD117COMBOS-US Refill Guide</h2>
 
 <input type="text" id="searchBox" placeholder="Search part number OR description..." onkeyup="filterList()" />
-
+<button onclick="exportRemainingToPDF()">Export Remaining to PDF</button>
 <div class="container">
   <div>
     <h3>All Items</h3>
@@ -264,6 +266,29 @@ color: #555;
     const value = document.getElementById("searchBox").value.toLowerCase();
     renderList(value);
   }
+  function exportRemainingToPDF() {
+  const remainingEl = document.getElementById("remainingList");
+
+  // Create a temporary container for clean formatting
+  const container = document.createElement("div");
+
+  const title = document.createElement("h2");
+  title.textContent = "Remaining Items Report";
+  container.appendChild(title);
+
+  const listClone = remainingEl.cloneNode(true);
+  container.appendChild(listClone);
+
+  const opt = {
+    margin: 0.5,
+    filename: "remaining-items.pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+  };
+
+  html2pdf().set(opt).from(container).save();
+}
 
   // Initial render
   renderList();
